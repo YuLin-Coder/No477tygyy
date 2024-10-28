@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>体育馆场地预约系统</title>
+    <meta name="keywords" content="前端模板">
+    <meta name="description" content="前端模板">
+
+    <script th:src="@{/index/js/jquery/jquery-2.1.4.min.js}" type="text/javascript"></script>
+    <script th:src="@{/index/layui/layui.js}" type="text/javascript"></script>
+    <script th:src="@{/index/js/index/index.js}" type="text/javascript"></script>
+    <script th:src="@{/index/js/index/freezeheader.js}" type="text/javascript"></script>
+    <script th:src="@{/index/layui/lay/modules/layer.js}" type="text/javascript"></script>
+    <script th:src="@{/index/js/index/sliders.js}" type="text/javascript"></script>
+    <script th:src="@{/index/js/index/html5.js}" type="text/javascript"></script>
+    <script th:src="@{/index/js/index/set.js}" type="text/javascript"></script>
+    <link rel="stylesheet" th:href="@{/index/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/index/layui/css/modules/layer/default/layer.css}"/>
+    <link rel="stylesheet" th:href="@{/index/css/global.css}"/>
+</head>
+<body>
+
+<div th:replace="index/header :: header"  ></div>
+
+
+<div class="layui-container container" style="padding-top:70px;">
+
+    <div class="main fly-user-main layui-clear">
+        <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+            <li class="layui-nav-item  layui-this">
+                <a href="toMyInfo">
+                    <i class="layui-icon">&#xe612;</i>
+                    用户中心
+                </a>
+            </li>
+            <li class="layui-nav-item ">
+                <a href="toMyComments">
+                    <i class="layui-icon">&#xe620;</i>
+                    我的评论
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="toMyRecord">
+                    <i class="layui-icon">&#xe611;</i>
+                    我的预约
+                </a>
+            </li>
+        </ul>
+
+
+        <div class="fly-panel fly-panel-user">
+            <div class="layui-tab layui-tab-brief" lay-filter="user">
+                <ul class="layui-tab-title" id="LAY_mine">
+                    <li class="layui-this" lay-id="info">个人信息</li>
+                </ul>
+                <div class="layui-tab-content" style="padding: 20px 0;">
+                    <div class="layui-form layui-form-pane layui-tab-item layui-show">
+                        <form class="layui-form" id="saveForm"  method="post">
+                            <input type="hidden" name="id"  th:value="${data.id}" class="layui-input" />
+
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">姓名</label>
+                                <div class="layui-input-inline">
+                                    <input name="realname" id="realname" th:value="${data.realname}" class="layui-input" />
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">昵称</label>
+                                <div class="layui-input-inline">
+                                    <input name="nickname" id="nickname" th:value="${data.nickname}" class="layui-input" />
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">密码</label>
+                                <div class="layui-input-inline">
+                                    <input type="password" name="pwd" id="pwd" th:value="${data.pwd}" class="layui-input" />
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">性别:</label>
+                                <div class="layui-input-inline">
+                                    <select    name="sex" th:field="${data.sex}">
+                                        <option value="男"   >男</option>
+                                        <option value="女"   >女</option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">手机号</label>
+                                <div class="layui-input-inline">
+                                    <input  name="phone" id="phone"  th:value="${data.phone}" class="layui-input" />
+                                </div>
+                            </div>
+
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">地址</label>
+                                <div class="layui-input-inline">
+                                    <input  name="address" id="address" th:value="${data.address}" class="layui-input" />
+                                </div>
+                            </div>
+
+
+                            <input type="hidden" name="tx" class="tx" th:value="${data.tx}">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">头像:</label>
+                                <div class="layui-upload">
+                                    <div class="layui-upload-list">
+                                        <img class="layui-upload-img" th:src="${data.tx}" style="width:200px;height:100px;" id="demo1">
+                                        <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" id="test1">+</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <button class="layui-btn" type="button" id="save">确认修改</button>
+                            </div>
+                        </form>
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="footer">
+    <p>体育馆场地预约系统</p>
+</div>
+
+<script>
+    $("#save").click(function(){
+        //执行添加的操作ajax
+        $.ajax({
+            cache:true,
+            type:"post",
+            url:"updateUser",
+            data:$("#saveForm").serialize(),
+            async:false,
+            success:function(e){
+                if(e == 'yes'){
+                    alert("修改成功！");
+                    window.parent.location.href="outLogin";
+                }else{
+                    alert("修改失败！");
+                }
+            }
+        })
+    });
+
+</script>
+</body>
+</html>

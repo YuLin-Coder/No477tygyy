@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:http="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="header">
+
+    <style>
+        #menu {
+            width: 100%;
+        }
+        #menu, #menu li {
+            list-style:none;
+            padding:2px;
+            margin:0;
+            float: left;
+            display: block;
+        }
+    </style>
+
+<div class="layui-header header">
+    <div class="main">
+        <ul class="layui-nav layui-nav-left" lay-filter="filter">
+
+           <span style="font-size: 20px;" >体育馆场地预约系统</span>
+
+
+            <li class="layui-nav-item layui-this nav-left" th:if="${session.get('url')} eq 'toIndex'" >
+            <li class="layui-nav-item nav-left" th:if="${session.get('url')} ne 'toIndex'" >
+                <a href="toIndex">首页</a>
+            </li>
+            <li class="layui-nav-item layui-this" th:if="${session.get('url')} eq 'toBoard'" >
+            <li class="layui-nav-item" th:if="${session.get('url')} ne 'toBoard'" >
+                <a href="toBoard">公告信息</a>
+            </li>
+
+        </ul>
+
+
+        <ul class="layui-nav layui-layout-right layui-nav-right" lay-filter="filter">
+            <li class="layui-nav-item" th:if="${session.get('type')} eq '2'">
+                <a>
+                    <img  th:src="${session.get('user').tx}" class="layui-nav-img">
+                    <span th:text="${session.get('user').realname}"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="toMyInfo">个人信息</a></dd>
+                    <dd><a href="outLogin">退了</a></dd>
+                </dl>
+            </li>
+
+            <li class="layui-nav-item"  th:if="${session.get('type')} ne '2'">
+                <a href="outLogin">去登陆</a>
+            </li>
+            <li class="layui-nav-item" th:if="${session.get('type')} ne '2'">
+                <a type="button" th:onclick="reg()">去注册</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+    <script>
+        layui.use([ 'form','jquery','layer','upload' ], function() {
+            var form = layui.form,
+                layer = layui.layer,
+                $ = layui.jquery,
+                upload = layui.upload;
+            form.render();//这句一定要加，占坑
+
+            window.reg = function(e){
+                layer.open({
+                    //调整弹框的大小
+                    area:['500px','900px'],
+                    shadeClose:true,//点击旁边地方自动关闭
+                    //动画
+                    anim:2,
+                    //弹出层的基本类型
+                    type: 2,
+                    title: '用户注册',
+                    //刚才定义的弹窗页面
+                    content: 'register', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+
+                });
+            }
+
+        })
+
+    </script>
+
+
+
+</div>
+
+
+</html>

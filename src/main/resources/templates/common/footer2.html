@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:http="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<div th:fragment="myfooter2">
+    <div style="margin-left: 20px;margin-top: 20px;">
+            <ul id="menu">
+                <li>
+                    <a class="layui-btn layui-btn-sm layui-btn-primary"
+                       th:href="'/'+${url}+'?pageNum='+${1}">首页</a>
+                </li>
+
+                <li>
+                    <a class="layui-btn layui-btn-sm layui-btn-disabled" th:if="${pageInfo.pageNum == pageInfo.getFirstPage()}">
+                        上一页
+                    </a>
+                    <a class="layui-btn layui-btn-sm layui-btn-primary" th:href="'/'+${url}+'?pageNum='+${pageInfo.prePage}"
+                       th:if="${pageInfo.pageNum > pageInfo.getFirstPage() && pageInfo.prePage != 0}">
+                        上一页
+                    </a>
+                </li>
+
+                <li th:each="i:${pageInfo.navigatepageNums}">
+
+                    <a class="layui-btn layui-btn-sm" th:href="'/'+${url}+'?pageNum='+${i}" th:if="${pageInfo.pageNum == i}"
+                       th:text="${i}"
+                    ></a>
+                    <a class="layui-btn layui-btn-sm layui-btn-primary" th:href="'/'+${url}+'?pageNum='+${i}"
+                       th:if="${pageInfo.pageNum != i}" th:text="${i}">
+                    </a>
+                </li>
+
+                <li>
+                    <a class="layui-btn layui-btn-sm layui-btn-disabled" href="#"
+                       th:if="${pageInfo.pageNum == pageInfo.getLastPage()}">下一页
+                    </a>
+                    <a class="layui-btn layui-btn-sm layui-btn-primary" th:href="'/'+${url}+'?pageNum='+${pageInfo.nextPage}"
+                       th:if="${pageInfo.pageNum < pageInfo.getLastPage()}">
+                        下一页
+                    </a>
+                </li>
+
+                <li>
+                    <a class="layui-btn layui-btn-sm layui-btn-primary" th:href="'/'+${url}+'?pageNum='+${pageInfo.pages}">尾页</a>
+
+                </li>
+
+            </ul>
+        </div>
+</div>
+</html>

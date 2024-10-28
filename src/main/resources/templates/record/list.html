@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>体育馆场地预约系统</title>
+    <link rel="stylesheet" type="text/css"  th:href="@{/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.js}"></script>
+    <script th:src="@{/layui/layui.js}" charset="utf-8"></script>
+
+<style>
+    #menu {
+        width: 100%;
+    }
+    #menu, #menu li {
+        list-style:none;
+        padding:2px;
+        margin:0;
+        float: left;
+        display: block;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="layui-col-md12">
+    <div class="layui-card">
+        <div class="layui-card-header">场地预约信息列表</div>
+        <div class="layui-card-body">
+            <form action="RecordList" method="post">
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" placeholder="根据场地预约日期" name="yy_date" th:value="${data.yy_date}" class="layui-input"  />
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <button type="submit" class="layui-btn layui-btn-sm layui-btn-normal">查询</button>
+                    </div>
+                </div>
+
+            </form>
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th>预约编号</th>
+                    <th>预约人</th>
+                    <th>预约场地</th>
+                    <th>预约日期</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>备注</th>
+                    <th>状态</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="data:${pageInfo.list}">
+                        <td th:text="${data.yybh}" ></td>
+                        <td th:text="${data.user.realname}" ></td>
+                        <td th:text="${data.spot.name}" ></td>
+                        <td th:text="${data.yy_date}"></td>
+                        <td th:text="${data.start_time}"></td>
+                        <td th:text="${data.end_time}"></td>
+                        <td th:text="${data.note}"></td>
+                        <td>
+                            <span  th:if="${data.state == '0'}">审核中</span>
+                            <span  th:if="${data.state == '1'}">预约成功</span>
+                            <span  th:if="${data.state == '2'}">预约失败</span>
+                        </td>
+                        <td th:text="${data.create_time}"></td>
+                        <td>
+                               <!--<a  th:href="@{/toUpdateRecord(id=${data.id})}"
+                                   class="layui-btn layui-btn-sm layui-btn-primary layui-border-green">修改</a>-->
+
+                            <a th:if="${data.state == '0'}" type="button" th:onclick="apply([[${data.id}]],'1')"
+                               class="layui-btn layui-btn-sm layui-btn-primary layui-border-green">通过</a>
+
+                            <a  th:if="${data.state == '0'}" type="button" th:onclick="apply([[${data.id}]],'2')"
+                               class="layui-btn layui-btn-sm layui-btn-primary layui-border-red">拒绝</a>
+
+                                <a type="button" th:onclick="del([[${data.id}]])"
+                                   class="layui-btn layui-btn-sm layui-btn-primary layui-border-red">删除</a>
+                            </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<div class="layui-row">
+    <div th:replace="common/footer2 :: myfooter2"  ></div>
+
+</div>
+
+<script>
+    
+    function apply(id,state) {
+        if(confirm("确定操作这条数据吗?")){
+            $.ajax({
+                cache:true,
+                url:"updateRecordState",
+                data:{"id": id,"state":state},
+                type:"post",
+                async:false,
+                success:function (data) {
+                    console.log(data)
+                    if (data == 'yes') {
+                        alert("操作成功！");
+                        document.location.reload();//当前页面
+                    }else{
+                        alert("操作失败！");
+                    }
+                }
+            });
+        }
+    }
+
+    function  del(id) {
+        if(confirm("确定删除吗?")){
+            $.ajax({
+                cache:true,
+                url:"deleteRecord",
+                data:{"id": id},
+                type:"post",
+                async:false,
+                success:function (data) {
+                    console.log(data)
+                    if (data == 'yes') {
+                        alert("删除成功！");
+                        document.location.reload();//当前页面
+                    }else{
+                        alert("删除失败！");
+                    }
+                }
+            });
+        }
+    }
+
+</script>
+
+</body>
+</html>

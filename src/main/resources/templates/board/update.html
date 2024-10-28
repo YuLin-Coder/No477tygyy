@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>体育馆场地预约系统</title>
+    <link rel="stylesheet" type="text/css"  th:href="@{/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-3.6.0.js}"></script>
+    <script th:src="@{/layui/layui.js}" charset="utf-8"></script>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">修改公告</div>
+                <div class="layui-card-body">
+                    <form  method="post" id="saveForm"  class="layui-form layui-form-pane">
+                        <input type="hidden" name="detail" id="detail" class="layui-input" />
+                        <input type="hidden" name="id"  th:value="${data.id}" class="layui-input" />
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-inline">
+                                <input name="title" id="title" th:value="${data.title}" class="layui-input" />
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">发布人</label>
+                            <div class="layui-input-inline">
+                                <input  name="editor" id="editor" th:value="${data.editor}" class="layui-input" />
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="photo" class="photo" th:value="${data.photo}">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">封面:</label>
+                            <div class="layui-upload">
+                                <div class="layui-upload-list">
+                                    <img class="layui-upload-img" th:src="${data.photo}" style="width:200px;height:100px;" id="demo1">
+                                    <button type="button" class="layui-btn layui-btn-xs layui-btn-warm" id="test1">+</button>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">公告详情</label>
+                            <div class="layui-input-inline" style="width:800px;">
+                           <textarea name="content" id="content" placeholder="请输入规范内容"
+                                     class="layui-textarea"  style="display: none;" th:text="${data.detail}"></textarea>
+                            </div>
+                        </div>
+
+                        <br>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" type="button" id="save">提交</button>
+                                <a href="/BoardList" class="layui-btn layui-btn-primary" >返回</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use([ 'form','jquery','layer','upload','layedit' ], function() {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.jquery,
+            layedit = layui.layedit,
+            upload = layui.upload;
+        form.render();//这句一定要加，占坑
+
+        layedit = layui.layedit;
+        layedit.set({
+            uploadImage: {
+                url: 'uploadconimage', //接口url
+                type: 'post' //默认post
+            }
+        });
+        //建立编辑器
+        var index = layedit.build('content', {
+            tool: ['strong', 'italic', 'underline', 'del', '|', 'left', 'center', 'right', 'link', 'unlink', 'image', 'face']
+        });
+
+
+        var uploadInst = upload.render({
+            elem: '#test1'
+            ,url: 'upload'
+            ,accept:'images'
+            ,size:50000
+            ,before: function(obj){
+                obj.preview(function(index, file, result){
+                    $('#demo1').attr('src', result);
+                });
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code > 0){
+                    return layer.msg('上传失败');
+                }
+                layer.msg('上传成功');
+
+                var fileupload = $(".photo");
+                fileupload.attr("value",res.data.src);
+                console.log(fileupload.attr("value"));
+            }
+            ,error: function(){
+                layer.msg('上传失败');
+            }
+        });
+
+
+        $("#save").click(function(){
+            //执行添加的操作ajax
+            var editContent = $.trim(layedit.getContent(index));  //取值
+            $("#detail").val(editContent)
+            $.ajax({
+                cache:true,
+                type:"post",
+                url:"updateBoard",
+                data:$("#saveForm").serialize(),
+                async:false,
+                success:function(e){
+                    if(e == 'yes'){
+                        alert("修改成功！");
+                        window.location.href="BoardList";
+                    }else{
+                        alert("修改失败！");
+                    }
+                }
+            })
+        });
+    })
+
+</script>
+
+
+</body>
+</html>

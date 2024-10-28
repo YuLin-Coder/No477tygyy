@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>体育馆场地预约系统</title>
+    <meta name="keywords" content="前端模板">
+    <meta name="description" content="前端模板">
+
+    <script th:src="@{/index/js/jquery/jquery-2.1.4.min.js}" type="text/javascript"></script>
+    <script th:src="@{/index/layui/layui.js}" type="text/javascript"></script>
+    <script th:src="@{/index/js/index/index.js}" type="text/javascript"></script>
+    <script th:src="@{/index/js/index/freezeheader.js}" type="text/javascript"></script>
+    <script th:src="@{/index/layui/lay/modules/layer.js}" type="text/javascript"></script>
+    <script th:src="@{/index/js/index/sliders.js}" type="text/javascript"></script>
+    <script th:src="@{/index/js/index/html5.js}" type="text/javascript"></script>
+    <link rel="stylesheet" th:href="@{/index/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" th:href="@{/index/layui/css/modules/layer/default/layer.css}"/>
+    <link rel="stylesheet" th:href="@{/index/css/global.css}"/>
+    <script type="text/javascript">
+        $(function(){
+            let oLi = document.getElementById("tab").getElementsByTagName("li");
+            let oUl = document.getElementById("ms-main").getElementsByTagName("div");
+            for(let i = 0; i < oLi.length; i++)
+            {
+                oLi[i].index = i;
+                oLi[i].onmouseover = function ()
+                {
+                    for(let n = 0; n < oLi.length; n++) oLi[n].className="";
+                    this.className = "cur";
+                    for(let n = 0; n < oUl.length; n++) oUl[n].style.display = "none";
+                    oUl[this.index].style.display = "block"
+                }
+            }
+        });
+    </script>
+    <!--
+    -->
+</head>
+<body>
+
+<div th:replace="index/header :: header"  ></div>
+
+<div class="layui-container container">
+    <div class="layui-row layui-col-space20">
+        <div class="layui-col-md12">
+
+            <div class="article-main">
+                <h2>
+                    公告信息
+                </h2>
+
+                <div class="article-list"  th:each="data:${pageInfo.list}">
+                   <img th:src="${data.photo}" style="width: 150px;height: 80px;">
+                    <ul>
+                        <h3>
+                            <a th:href="@{/toBoardDetail(id=${data.id})}" th:text="${data.title}"></a>
+                        </h3>
+                        <p th:text="${data.title}"></p>
+                        <p class="autor">
+                            <span class="lm f_l"><a th:text="${data.create_time}"></a></span>
+                            <span class="pingl f_r">发布人：<a th:text="${data.editor}"></a></span></p>
+                    </ul>
+                </div>
+
+            </div>
+            <!--分页-->
+            <div class="layui-row">
+                <div th:replace="common/footer2 :: myfooter2"  ></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="footer">
+    <p>体育馆场地预约系统</p>
+</div>
+</body>
+</html>
